@@ -1034,6 +1034,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqm9jrNPr4QU6H2hfPI
     // Reset state
     budgetTier = ''; duration = ''; vatStatus = '';
     doneSteps.clear();
+    currentStep = 0;
 
     // Hide conditional sections
     document.getElementById('budgetExactWrap').style.display = 'none';
@@ -1041,13 +1042,28 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqm9jrNPr4QU6H2hfPI
     document.getElementById('pitching-detail-wrap').style.display = 'none';
     document.getElementById('durationCustom').style.display = 'none';
 
-    // Hide success, show form
+    // Hide success screen
     document.getElementById('successCard').classList.remove('show');
+
+    // Show stepper + progress
     document.getElementById('stepper').style.display = '';
     document.querySelector('.progress-wrap').style.display = '';
 
-    // Go back to step 1
-    goStep(0);
+    // Reset stepper buttons
+    document.querySelectorAll('.step-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', i === 0);
+      btn.classList.remove('done');
+    });
+
+    // Show step 0, hide all others
+    document.querySelectorAll('.section-card').forEach((card, i) => {
+      card.style.display = i === 0 ? '' : 'none';
+      card.classList.toggle('active', i === 0);
+    });
+
+    // Reset progress bar
+    document.getElementById('progressFill').style.width = '0%';
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   let currentLang = 'vi';
