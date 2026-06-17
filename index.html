@@ -613,6 +613,9 @@
       <div class="success-cta">
         <p data-vi="Trong lúc chờ, bạn có thể tìm hiểu thêm về năng lực, case studies và các dịch vụ của PMAX." data-en="In the meantime, feel free to explore PMAX's capabilities, case studies and services.">Trong lúc chờ, bạn có thể tìm hiểu thêm về năng lực, case studies và các dịch vụ của PMAX.</p>
         <a class="btn-pmax-site" href="https://pmax.com.vn" target="_blank" rel="noopener" data-vi="🌐 Khám phá PMAX tại đây" data-en="🌐 Explore PMAX here">🌐 Khám phá PMAX tại đây</a>
+        <div style="margin-top:16px;">
+          <button onclick="resetForm()" style="background:transparent;border:2px solid var(--pmax-blue);color:var(--pmax-blue);padding:11px 28px;border-radius:var(--radius-sm);font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:var(--transition);" onmouseover="this.style.background='var(--pmax-blue-pale)'" onmouseout="this.style.background='transparent'" data-vi="📋 Tạo brief mới" data-en="📋 Submit another brief">📋 Tạo brief mới</button>
+        </div>
         <div class="success-contact" data-vi="Nếu cần hỗ trợ gấp, vui lòng liên hệ trực tiếp qua PIC PMAX đang trao đổi cùng bạn." data-en="If you need urgent support, please reach out directly to your PMAX contact.">Nếu cần hỗ trợ gấp, vui lòng liên hệ trực tiếp qua PIC PMAX đang trao đổi cùng bạn.</div>
       </div>
     </div>
@@ -927,7 +930,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqm9jrNPr4QU6H2hfPI
       pic: { name:v('picName'), title:v('picTitle'), role:roleEl?roleEl.value:'', email:v('picEmail'), phone:v('picPhone') },
       industry: v('industry'), channels: v('channels'),
       challenge: v('challenge'), competitors: v('competitors'), goals: v('goals'), strategy: v('strategy'),
-      agencyType: agencyEl?agencyEl.value:'', agencyTypeLabel: agencyEl?(agencyMap[agencyEl.value]||''):'', agencyDetail: v('agencyDetail'),
+      agencyType: agencyEl?agencyEl.value:'', agencyTypeLabel: agencyEl?(agencyMap[agencyEl.value]||''):'', agencyDetail: v('agencyDetail'), agencyReason: v('agencyReason'),
       product: v('product'), usp: v('usp'), price: v('price'), audience: v('audience'),
       kpi: v('kpi'), kpiDef: v('kpiDef'), tracking: v('tracking'), history: v('history'), services: v('services'),
       budget: { tier:tierMap[budgetTier]||'', exact:v('budgetExact') },
@@ -1019,7 +1022,34 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqm9jrNPr4QU6H2hfPI
     goStep(draft.step || 0);
   }
 
-  // ── LANGUAGE SWITCH ──────────────────────────────────────────────
+  function resetForm() {
+    // Reset all inputs
+    document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"],textarea,select').forEach(el => { el.value = ''; });
+    document.querySelectorAll('input[type="radio"]').forEach(el => { el.checked = false; });
+    document.querySelectorAll('.radio-item').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.tier-btn').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.vat-btn').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.dur-btn').forEach(el => el.classList.remove('active'));
+
+    // Reset state
+    budgetTier = ''; duration = ''; vatStatus = '';
+    doneSteps.clear();
+
+    // Hide conditional sections
+    document.getElementById('budgetExactWrap').style.display = 'none';
+    document.getElementById('agency-detail-wrap').style.display = 'none';
+    document.getElementById('pitching-detail-wrap').style.display = 'none';
+    document.getElementById('durationCustom').style.display = 'none';
+
+    // Hide success, show form
+    document.getElementById('successCard').classList.remove('show');
+    document.getElementById('stepper').style.display = '';
+    document.querySelector('.progress-wrap').style.display = '';
+
+    // Go back to step 1
+    goStep(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   let currentLang = 'vi';
 
   function setLang(lang) {
